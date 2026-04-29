@@ -1,0 +1,17 @@
+{
+  "name": "wide-drive",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "client": "cd client && npm run dev",
+    "server": "cd server && npm start",
+    "start": "concurrently \"npm run client\" \"npm run server\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
