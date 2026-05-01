@@ -1,39 +1,43 @@
-import { FileText, X } from "lucide-react"
+import { FileText, X } from "lucide-react";
 
 function FileCard({ file, onRemove }) {
-  const sizeKB = (file.size / 1024).toFixed(1)
-  const ext = file.name.split(".").pop().toUpperCase()
+  const sizeKB = (file.size / 1024).toFixed(1);
+  const ext = file.name.split(".").pop().toUpperCase();
 
   return (
-    <div className="group relative rounded-2xl border bg-white p-4 shadow-sm hover:shadow-md transition">
+    <div className="group relative bg-white rounded-2xl p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition">
       <button
         onClick={onRemove}
-        className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 p-1 rounded-full hover:bg-gray-100 transition"
+        className="absolute top-2 right-2 p-1 rounded-md text-gray-400 opacity-0 group-hover:opacity-100 hover:text-gray-700 transition"
       >
-        <X className="w-4 h-4 text-gray-500" />
+        <X size={13} />
       </button>
 
-      <div className="flex items-center gap-3 mb-4">
-        <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-gray-100">
-          <FileText className="w-6 h-6 text-gray-600" />
+      <div className="flex flex-col items-center text-center gap-3">
+        <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-gray-100 group-hover:bg-gray-200 transition">
+          <FileText size={20} className="text-gray-700" />
         </div>
 
-        <div className="overflow-hidden">
-          <p className="text-sm text-gray-900 truncate geist-title">
+        <div className="w-full">
+          <p className="geist-title text-[13px] text-gray-900 truncate">
             {file.name}
           </p>
-          <p className="text-xs text-gray-500 geist-body">
+          <p className="geist-body text-[11px] text-gray-500 mt-0.5">
             {sizeKB} KB
           </p>
         </div>
       </div>
 
-      <div className="text-xs text-gray-500 flex justify-between geist-body">
-        <span>{ext}</span>
-        <span>{new Date(file.lastModified).toLocaleDateString()}</span>
+      <div className="mt-3 pt-2 flex justify-between">
+        <span className="geist-body text-[10px] text-gray-600">{ext}</span>
+        <span className="geist-body text-[10px] text-gray-400">
+          {file.createdAt
+            ? new Date(file.createdAt).toLocaleDateString()
+            : ""}
+        </span>
       </div>
     </div>
-  )
+  );
 }
 
-export default FileCard
+export default FileCard;

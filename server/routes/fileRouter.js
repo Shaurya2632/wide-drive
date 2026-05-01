@@ -6,11 +6,12 @@ import {
   uploadFile,
   deleteFile,
 } from "../controllers/fileController.js";
+import { upload } from "../config/multer.js";
 
 export const fileRouter = express.Router();
 
-fileRouter.get("/files", files);
-fileRouter.get("/file/:id", fileById);
-fileRouter.get("/download/:id", downloadFileById);
-fileRouter.post("/upload", uploadFile);
-fileRouter.delete("/file/:id", deleteFile);
+fileRouter.get("/", files);
+fileRouter.get("/:id", fileById);
+fileRouter.get("/:id/download", downloadFileById);
+fileRouter.post("/", upload.array("files"), uploadFile);
+fileRouter.delete("/:id", deleteFile);

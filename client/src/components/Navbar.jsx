@@ -1,57 +1,46 @@
 import { NavLink } from "react-router-dom";
-import { UploadCloud, Folder } from "lucide-react";
 
-export default function Navbar() {
-  const base =
-    "relative flex items-center gap-2 px-3 py-1.5 text-sm geist-body transition-all duration-200 hover:scale-105";
-  const active = "text-black";
-  const inactive = "text-gray-600 hover:text-black";
+function Navbar() {
+  const linkClass = ({ isActive }) =>
+    `geist-body text-[15px] pb-1 transition-colors duration-150 relative group cursor-pointer ${
+      isActive ? "text-black" : "text-gray-400 hover:text-gray-600"
+    }`;
+
+  const underline = (isActive) =>
+    `absolute bottom-0 left-0 h-[2px] bg-black rounded-full transition-[width] duration-250 ease-in-out ${
+      isActive ? "w-full" : "w-0"
+    }`;
 
   return (
-    <div className="w-full bg-white mb-6">
-      <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-        <h1 className="text-xl geist-title text-black">Wide Drive</h1>
-
-        <div className="flex gap-6">
-          <NavLink
-            to="/drop"
-            className={({ isActive }) =>
-              `${base} ${isActive ? active : inactive}`
-            }
-          >
+    <header className="sticky top-0 z-50 bg-white border-b border-gray-100">
+      <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+        <NavLink to="/" className="cursor-pointer">
+          <span className="geist-title text-[22px]  text-black select-none">
+            Wide Drive
+          </span>
+        </NavLink>
+        <nav className="flex items-center gap-8">
+          <NavLink to="/drop" className={linkClass}>
             {({ isActive }) => (
               <>
-                <UploadCloud className="w-4 h-4" />
-                Drop File
-                <span
-                  className={`absolute left-0 -bottom-1 h-0.5 bg-black transition-all duration-300 ${
-                    isActive ? "w-full opacity-100" : "w-0 opacity-0"
-                  }`}
-                />
+                Drop Area
+                <span className={underline(isActive)} />
               </>
             )}
           </NavLink>
 
-          <NavLink
-            to="/upload"
-            className={({ isActive }) =>
-              `${base} ${isActive ? active : inactive}`
-            }
-          >
+          <NavLink to="/upload" className={linkClass}>
             {({ isActive }) => (
               <>
-                <Folder className="w-4 h-4" />
-                Upload File
-                <span
-                  className={`absolute left-0 -bottom-1 h-0.5 bg-black transition-all duration-300 ${
-                    isActive ? "w-full opacity-100" : "w-0 opacity-0"
-                  }`}
-                />
+                Drive Store
+                <span className={underline(isActive)} />
               </>
             )}
           </NavLink>
-        </div>
+        </nav>
       </div>
-    </div>
+    </header>
   );
 }
+
+export default Navbar;

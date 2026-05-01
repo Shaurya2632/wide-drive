@@ -1,21 +1,51 @@
+import { useContext } from "react";
 import FileCard from "./FileCard";
+import { FileContext } from "../context/FileContext";
+import { deleteFile, getFiles } from "../services/fileService";
 
-function FileStorage({ files, setFiles }) {
-  const removeFile = (index) => {
-    setFiles((prev) => prev.filter((_, i) => i !== index));
+function FileStorage({ files }) {
+  const { setUploadFiles } = useContext(FileContext);
+
+  const safeFiles = Array.isArray(files) ? files : [];
+
+  const removeFile = async (id) => {
+    try {
+      await deleteFile(id);
+
+      const res = await getFiles();
+      const data = Array.isArray(res.data)
+        ? res.data
+        : res.data?.files || [];
+
+      setUploadFiles(data);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  if (files.length === 0) return null;
+  if (safeFiles.length === 0) {
+    return (
+      <div className="flex justify-center mt-20">
+        <p className="text-gray-500 geist-body">No files uploaded</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="mt-8">
-      <h2 className="text-sm text-gray-900 mb-4 geist-title">
-        Files ({files.length})
-      </h2>
+    <div>
+      <div className="mb-4 flex justify-between">
+        <h2 className="text-sm geist-title text-gray-900">
+          Files ({safeFiles.length})
+        </h2>
+      </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {files.map((file, i) => (
-          <FileCard key={i} file={file} onRemove={() => removeFile(i)} />
+      <div className="grid gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
+        {safeFiles.map((file) => (
+          <FileCard
+            key={file._id}
+            file={file}
+            onRemove={() => removeFile(file._id)}
+          />
         ))}
       </div>
     </div>
