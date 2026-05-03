@@ -1,32 +1,31 @@
 import { Link } from "react-router-dom";
-import Divider from "@mui/material/Divider";
 
 function NotFound() {
   return (
-    <div className="h-[calc(100vh-20%)]! w-full flex items-start justify-center px-6 pt-65">
-      <div className="max-w-xl w-full text-center">
-        <h1 className="geist-title text-6xl sm:text-7xl text-black">404</h1>
+    <div className="relative h-full w-full flex items-center justify-center overflow-hidden bg-white poppins-404">
+      <div className="relative z-10 text-center max-w-md w-full mx-4 p-6 rounded-2xl bg-white/80 backdrop-blur-md">
+        <h1 className="text-8xl leading-none text-red-600 poppins-404t">404</h1>
 
-        <p className="geist-body mt-3 text-gray-600 text-[15px]">
-          The page you are looking for does not exist or has been moved.
+        <h2 className="mt-4 text-xl text-gray-800">Page not found</h2>
+
+        <p className="mt-2 text-sm text-gray-500">
+          The page you are looking for doesn’t exist or has been moved.
         </p>
 
-        <Divider className="my-5! bg-gray-300! w-2/3 mx-auto!" />
-
-        <div className="mt-7 flex items-center justify-center gap-3 flex-wrap">
+        <div className="mt-6 flex gap-3 justify-center">
           <Link
-            to="/"
-            className="geist-body px-3 py-1.5! rounded-xl text-[15px]   hover:bg-black hover:text-white transition-all duration-200 cursor-pointer"
+            to="/drive"
+            className="px-4 py-2 rounded-lg bg-blue-500 text-white text-sm hover:scale-110 transition duration-200"
           >
-            Go Home
+            Go to Drive
           </Link>
 
-          <button
-            onClick={() => window.history.back()}
-            className="geist-body px-3 py-1.5! rounded-xl text-[15px] text-gray-600  transition-all duration-200 cursor-pointer"
+          <Link
+            to="/"
+            className="px-4 py-2 rounded-lg text-sm hover:scale-110 transition duration-200"
           >
-            Go Back
-          </button>
+            Home
+          </Link>
         </div>
       </div>
     </div>

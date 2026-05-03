@@ -1,40 +1,73 @@
-import { FileText, X } from "lucide-react";
+import { useState } from "react";
+import { X, Download } from "lucide-react";
+import { formatSize, resolveFileUrl, getFileMeta } from "../utils/file.utils";
 
 function FileCard({ file, onRemove }) {
-  const sizeKB = (file.size / 1024).toFixed(1);
-  const ext = file.name.split(".").pop().toUpperCase();
+  const [loading, setLoading] = useState(false);
+
+  const ext = file.name?.split(".").pop()?.toUpperCase() || "FILE";
+  const { Icon, color, bg } = getFileMeta(ext);
+
+  const handleDownload = async () => {
+    try {
+      setLoading(true);
+
+      const { url, revoke, name } = await resolveFileUrl(file);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = name || "download";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      if (revoke) {
+        setTimeout(() => URL.revokeObjectURL(url), 5000);
+      }
+    } catch (err) {
+      console.error("Download failed:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="group relative bg-white rounded-2xl p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition">
-      <button
-        onClick={onRemove}
-        className="absolute top-2 right-2 p-1 rounded-md text-gray-400 opacity-0 group-hover:opacity-100 hover:text-gray-700 transition"
-      >
-        <X size={13} />
-      </button>
+    <div className="group w-full flex items-center gap-3 px-4 py-2 rounded-lg bg-white hover:bg-stone-50 transition-all duration-200">
 
-      <div className="flex flex-col items-center text-center gap-3">
-        <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-gray-100 group-hover:bg-gray-200 transition">
-          <FileText size={20} className="text-gray-700" />
-        </div>
-
-        <div className="w-full">
-          <p className="geist-title text-[13px] text-gray-900 truncate">
-            {file.name}
-          </p>
-          <p className="geist-body text-[11px] text-gray-500 mt-0.5">
-            {sizeKB} KB
-          </p>
-        </div>
+      <div className={`w-9 h-9 shrink-0 rounded-md flex items-center justify-center ${bg}`}>
+        <Icon className={`w-4 h-4 ${color}`} />
       </div>
 
-      <div className="mt-3 pt-2 flex justify-between">
-        <span className="geist-body text-[10px] text-gray-600">{ext}</span>
-        <span className="geist-body text-[10px] text-gray-400">
-          {file.createdAt
-            ? new Date(file.createdAt).toLocaleDateString()
-            : ""}
-        </span>
+      <div className="flex-1 min-w-0">
+        <p className="text-[13px] text-stone-800 truncate leading-5">
+          {file.name || "Untitled"}
+        </p>
+        <p className="text-[11px] text-stone-400 leading-4">
+          {ext} • {formatSize(file.size)}
+        </p>
+      </div>
+
+      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all duration-200">
+
+        <button
+          onClick={handleDownload}
+          disabled={loading}
+          className="w-7 h-7 flex items-center justify-center rounded-md text-blue-600 hover:bg-blue-50 transition-all hover:scale-105 disabled:opacity-50"
+        >
+          {loading ? (
+            <span className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+          ) : (
+            <Download className="w-4 h-4" />
+          )}
+        </button>
+
+        <button
+          onClick={() => onRemove(file)}
+          className="w-7 h-7 flex items-center justify-center rounded-md text-red-500 hover:bg-red-50 transition-all hover:scale-105"
+        >
+          <X className="w-4 h-4" />
+        </button>
+
       </div>
     </div>
   );
